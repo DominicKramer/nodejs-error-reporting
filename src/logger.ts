@@ -20,7 +20,7 @@ import * as is from 'is';
 const isObject = is.object;
 const isString = is.string;
 const isNumber = is.number;
-const logger = require('@google-cloud/common').logger;
+import {logger} from '@google-cloud/common';
 const packageJson = require('../../package.json');
 
 import {ConfigurationOptions} from './configuration';
@@ -42,7 +42,7 @@ import {ConfigurationOptions} from './configuration';
  * @returns {Object} - returns an instance of the logger created with the given/
  *  default options
  */
-export function createLogger(initConfiguration: ConfigurationOptions) {
+export function createLogger(initConfiguration?: ConfigurationOptions) {
   // Default to log level: warn (2)
   const DEFAULT_LEVEL = logger.LEVELS[2];
   let level = DEFAULT_LEVEL;
@@ -51,12 +51,12 @@ export function createLogger(initConfiguration: ConfigurationOptions) {
     level =
         logger.LEVELS[~~process.env.GCLOUD_ERRORS_LOGLEVEL!] || DEFAULT_LEVEL;
   } else if (
-      isObject(initConfiguration) && has(initConfiguration, 'logLevel')) {
-    if (isString(initConfiguration.logLevel)) {
+      isObject(initConfiguration!) && has(initConfiguration!, 'logLevel')) {
+    if (isString(initConfiguration!.logLevel)) {
       // Cast string as integer
-      level = logger.LEVELS[~~initConfiguration.logLevel!] || DEFAULT_LEVEL;
-    } else if (isNumber(initConfiguration.logLevel)) {
-      level = logger.LEVELS[initConfiguration.logLevel!] || DEFAULT_LEVEL;
+      level = logger.LEVELS[~~initConfiguration!.logLevel!] || DEFAULT_LEVEL;
+    } else if (isNumber(initConfiguration!.logLevel)) {
+      level = logger.LEVELS[initConfiguration!.logLevel!] || DEFAULT_LEVEL;
     } else {
       throw new Error(
           'config.logLevel must be a number or decimal ' +
